@@ -17,26 +17,26 @@ var connector = new botbuilder.ChatConnector({
 server.post('/api/messages', connector.listen());
 
 // Reply by echoing
-var bot = new botbuilder.UniversalBot(connector, function (session) {
-    session.send('Je suis un bot null')
-    //session.send('you have tapped : %s | [Length: %s]', session.message.text, session.message.text.length)
-    //session.send(JSON.stringify(session.message.type));
-
-    bot.on('typing', function(){
-        session.send('tu tapes !');
+var bot = new botbuilder.UniversalBot(connector, function(session){
+    session.send('You say : %s | [length: %s]', session.message.text, session.message.text.length);
+    bot.on('typing', function () {
+        session.send('Tu tapes !');
     });
 
-    bot.on('conversationUpdate', function (message) {
-        if(message.membersAdded && message.membersAdded.length > 0) {
-            var membersAdded = message.membersAdded
-                .map(function (x) {
-                    var isSelf = x.id === message.address.bot.id;
-                    return (isSelf ? message.address.bot.name : x.name) || ' ' + '(Id = ' + x.id +')'
-                }).join(', ');
+    bot.on('conversationUpdate', function(message) {
+        if (message.membersAdded && message.membersAdded.length > 0) {
+            var membersAdded = message.membersAdded.map(function (x) {
+                var isSelf = x.id == message.address.bot.id;
+                return (isSelf ? message.address.bot.name : x.name) || ' ' + '(Id=' + x.id + ' )'
+            }).join(', ');
             bot.send(new botbuilder.Message()
                 .address(message.address)
-                .text('Bienvenue ' + membersAdded))
+                .text('Bienvenue ' + membersAdded));
         }
     });
-
 });
+
+// bot doit capter que le user ecrit
+// ajout user bot doit renvoyer les informations du user nom / id
+// remove user / bot - informations
+// and welcome message
